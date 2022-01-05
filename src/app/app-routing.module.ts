@@ -21,4 +21,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+  user =
+    Object.keys(JSON.parse(localStorage.getItem('user') || '{}')).length > 0;
+}

@@ -14,6 +14,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { TodoItemComponent } from './components/todo-item/todo-item.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,6 +28,7 @@ import { FooterComponent } from './components/footer/footer.component';
     PageNotFoundComponent,
     HeaderComponent,
     FooterComponent,
+    TodoItemComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,6 +37,7 @@ import { FooterComponent } from './components/footer/footer.component';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    MatFormFieldModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
