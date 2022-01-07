@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { AuthService } from './../../services/auth.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -20,7 +21,8 @@ import { Component, OnInit } from '@angular/core';
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ng-container *ngIf="checkedLoggedIn; else elseTemplate">
+          <!-- *ngIf="isLoggedIn || (user | json) !== '{}'; else elseTemplate" -->
+          <ng-container *ngIf="isLoggedIn$ | async; else elseTemplate">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a
@@ -55,20 +57,17 @@ import { Component, OnInit } from '@angular/core';
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <!-- {{ user.firstName + ' ' + user.lastName }} -->
                 {{ user.email }}
               </button>
               <ul class="dropdown-menu">
                 <li style="cursor: pointer;">
-                  <a class="dropdown-item" (click)="logout()">Logout</a>
+                  <a class="dropdown-item" (click)="onLogout()">Logout</a>
                 </li>
               </ul>
             </div>
           </ng-container>
           <ng-template #elseTemplate>
             <div class="d-flex justify-content-end align-center w-100">
-              <!-- <ul class="navbar-nav me-auto mb-2 mb-lg-0"> -->
-              <!-- class="d-flex align-center justify-content-between  w-100" -->
               <ul
                 style="list-style: none;"
                 class="d-flex align-center navbar-nav"
@@ -99,26 +98,29 @@ import { Component, OnInit } from '@angular/core';
   styles: [],
 })
 export class HeaderComponent implements OnInit {
-  // isLoggedIn = JSON.parse(localStorage.getItem('user') || '{}') ? false : true;
-  isLoggedIn =
-    Object.keys(JSON.parse(localStorage.getItem('user') || '{}')).length > 0;
-  user = JSON.parse(localStorage.getItem('user') || '{}');
-  checkedLoggedIn: boolean;
-  constructor(private router: Router, private authService: AuthService) {
-    // console.log(
-    //   this.isLoggedIn,
-    //   'user',
-    //   this.user,
-    //   this.authService.checkedLoggedIn()
-    // );
-    this.checkedLoggedIn = this.authService.checkedLoggedIn();
+  // ngOnInit(): void {
+  //   this.auth.checkedLoggedIn();
+  //   this.auth.headerOptions.subscribe((change) => (this.isLoggedIn = change));
+  // }
+
+  // logout() {
+  //   localStorage.removeItem('user');
+  //   alert('Logout Successfully');
+  //   this.router.navigate(['/signin']);
+  //   this.auth.setHeaderOptions(false);
+  // }
+
+  isLoggedIn$: Observable<boolean>;
+  public user: any = {};
+
+  constructor(private auth: AuthService) {
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.isLoggedIn$ = this.auth.isLoggedIn;
   }
-
-  ngOnInit(): void {}
-
-  logout() {
-    localStorage.removeItem('user');
-    alert('Logout Successfully');
-    this.router.navigate(['/signin']);
+  onLogout() {
+    this.auth.logout();
+  }
+  ngOnInit() {
+    // this.isLoggedIn$ = this.authService.isLoggedIn;
   }
 }

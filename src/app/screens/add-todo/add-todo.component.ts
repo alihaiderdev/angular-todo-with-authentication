@@ -44,7 +44,11 @@ import { v4 as uuidv4 } from 'uuid';
           Date and time is required
         </div>
       </div>
-      <button type="submit" class="btn btn-success w-100 btn-lg">
+      <button
+        type="submit"
+        class="btn btn-success w-100 btn-lg"
+        [disabled]="todoForm.invalid"
+      >
         Add Todo
       </button>
     </form>
@@ -74,30 +78,7 @@ export class AddTodoComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-  signUp() {
-    if (this.task?.value !== '' && this.dateTime?.value !== '') {
-      const todo = {
-        id: uuidv4(),
-        task: this.task?.value,
-        dateTime: this.dateTime?.value,
-        active: true,
-      };
-      this.todos.push(todo);
-      localStorage.setItem('todos', JSON.stringify(this.todos));
-      alert('Todo Added Successfully');
-      this.todoForm.reset();
-      // this.router.navigate(['/todos']);
-    } else {
-      alert('Please fill all fields all are required!');
-    }
 
-    // console.log(
-    //   this.users,
-    //   'users',
-    //   this.users.find((user) => user.email === this.email?.value)
-    // );
-    // console.log(this.signupForm.value);
-  }
   addTodo() {
     if (this.task?.value !== '' && this.dateTime?.value !== '') {
       const todo = {
@@ -105,6 +86,7 @@ export class AddTodoComponent implements OnInit {
         task: this.task?.value,
         dateTime: this.dateTime?.value,
         active: true,
+        addedBy: JSON.parse(localStorage.getItem('user') || '{}').email,
       };
       this.todos.push(todo);
       localStorage.setItem('todos', JSON.stringify(this.todos));

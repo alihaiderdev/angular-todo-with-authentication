@@ -3,4 +3,5 @@ export interface Todo {
   dateTime: string;
   id: string;
   active: boolean;
+  addedBy: string;
 }

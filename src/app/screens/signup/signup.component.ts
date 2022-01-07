@@ -178,12 +178,5 @@ export class SignupComponent implements OnInit {
     } else {
       alert('Please fill all fields all are required!');
     }
-
-    // console.log(
-    //   this.users,
-    //   'users',
-    //   this.users.find((user) => user.email === this.email?.value)
-    // );
-    // console.log(this.signupForm.value);
   }
 }

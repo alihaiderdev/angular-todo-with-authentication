@@ -1,3 +1,4 @@
+import { AuthGuard } from './guards/auth/auth.guard';
 import { TodosListComponent } from './screens/todos-list/todos-list.component';
 import { CompletedTodosComponent } from './screens/completed-todos/completed-todos.component';
 import { AddTodoComponent } from './screens/add-todo/add-todo.component';
@@ -22,6 +23,6 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class AppRoutingModule {
-  user =
-    Object.keys(JSON.parse(localStorage.getItem('user') || '{}')).length > 0;
+  // user =
+  //   Object.keys(JSON.parse(localStorage.getItem('user') || '{}')).length > 0;
 }

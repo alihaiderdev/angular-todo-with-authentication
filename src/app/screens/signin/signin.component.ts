@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth.service';
 import { Router } from '@angular/router';
 import { Signin } from './../../models/signin';
 import { Validators, FormBuilder } from '@angular/forms';
@@ -52,7 +53,13 @@ import { Component, OnInit } from '@angular/core';
           Min length allowed is 8
         </div>
       </div>
-      <button type="submit" class="btn btn-success w-100 btn-lg">Signin</button>
+      <button
+        type="submit"
+        class="btn btn-success w-100 btn-lg"
+        [disabled]="signinForm.invalid"
+      >
+        Signin
+      </button>
     </form>
   `,
   styles: [],
@@ -61,12 +68,21 @@ export class SigninComponent implements OnInit {
   users: Signin[];
   localUser: string | null;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) {
+  // isLoggedIn: any;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    public auth: AuthService
+  ) {
+    // this.isLoggedIn = this.auth.checkedLoggedIn();
+
     this.localUser = localStorage.getItem('users') || '[]';
     if (this.localUser === null) {
       this.users = [];
     }
     this.users = JSON.parse(this.localUser);
+    // localStorage.setItem('isLoggedIn', false.toString());
   }
   signinForm = this.formBuilder.group({
     email: ['', [Validators.required]],
@@ -99,14 +115,7 @@ export class SigninComponent implements OnInit {
         ) {
           alert('Password is Incorrect!');
         }
-        console.log(
-          this.users.find(
-            (user) =>
-              user.email === this.email?.value &&
-              user.password === this.password?.value
-          ),
-          'user'
-        );
+
         localStorage.setItem(
           'user',
           JSON.stringify(
@@ -117,22 +126,18 @@ export class SigninComponent implements OnInit {
             )
           )
         );
+
         alert('Signin Successfully');
         this.signinForm.reset();
         this.router.navigate(['/add-todo']);
+        this.auth.login({
+          email: this.email?.value,
+          password: this.password?.value,
+        });
+        // this.auth.setHeaderOptions(true);
       }
     } else {
       alert('Please fill all fields all are required!');
     }
-
-    // console.log(
-    //   'users',
-    //   this.users.find(
-    //     (user) =>
-    //       user.email === this.email?.value &&
-    //       user.password === this.password?.value
-    //   ),
-    //   this.password?.value
-    // );
   }
 }

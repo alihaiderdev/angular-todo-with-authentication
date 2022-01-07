@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Todo } from './../../models/todo';
 import { Component, OnInit } from '@angular/core';
 
@@ -12,7 +13,6 @@ import { Component, OnInit } from '@angular/core';
             <app-todo-item
               [todo]="todo"
               [i]="i"
-              (todoDelete)="deleteTodo($event)"
               (todoToggle)="toggleTodo($event)"
             >
             </app-todo-item>
@@ -29,29 +29,56 @@ import { Component, OnInit } from '@angular/core';
 export class TodosListComponent implements OnInit {
   todos: Todo[];
   localTodo: string | null;
-  constructor() {
+  // completedTodos: Todo[];
+
+  constructor(private router: Router) {
     this.localTodo = localStorage.getItem('todos') || '[]';
     if (this.localTodo === null) {
       this.todos = [];
     }
     this.todos = JSON.parse(this.localTodo);
+
+    console.log(
+      'onload',
+      this.todos.filter((todo) => todo.active === false),
+      'filter',
+      this.todos
+    );
   }
 
   addTodo(todo: Todo) {
     this.todos.push(todo);
   }
 
-  deleteTodo(todo: Todo) {
-    // console.log(todo);
-    this.todos.splice(this.todos.indexOf(todo), 1);
-    // console.log('todos: ', this.todos);
-    localStorage.setItem('todos', JSON.stringify(this.todos));
-  }
+  // deleteTodo(todo: Todo) {
+  //   this.todos.splice(this.todos.indexOf(todo), 1);
+  //   localStorage.setItem('todos', JSON.stringify(this.todos));
+  // }
 
   toggleTodo(todo: Todo) {
     let todoIndex = this.todos.indexOf(todo);
     this.todos[todoIndex].active = !this.todos[todoIndex].active;
-    localStorage.setItem('todos', JSON.stringify(this.todos));
+    // localStorage.setItem('todos', JSON.stringify(this.todos));
+    localStorage.setItem(
+      'todos',
+      JSON.stringify(this.todos.filter((todo) => todo.active === true))
+    );
+
+    localStorage.setItem(
+      'completed-todos',
+      JSON.stringify(this.todos.filter((todo) => todo.active === false))
+    );
+    alert('Checked task added to completed task screen!');
+    this.todos = JSON.parse(localStorage.getItem('todos') || '[]');
+    // console.log(this.todos);
+
+    // this.router.navigate(['/completed-todos']);
+    // console.log(
+    //   this.todos.filter((todo) => todo.active === false),
+    //   'filter',
+    //   this.todos
+    // );
   }
+
   ngOnInit(): void {}
 }
